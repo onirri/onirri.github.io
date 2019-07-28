@@ -101,4 +101,5 @@ sudo systemctl start docker
 
 #### 参考资料
 
-1. 
+1.  [CentOS Docker 安装](https://www.runoob.com/docker/centos-docker-install.html)
+

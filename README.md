@@ -6,6 +6,6 @@
 
 1. [Docker的介绍和使用](/docker/)
 
-
+2. [Kafka的介绍和使用](/kafka/)
 
 
