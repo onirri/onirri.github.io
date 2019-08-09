@@ -44,7 +44,7 @@ firewall-cmd --reload #重载入添加的端口
 
 **客户端可以使用Navicat**
 
-![1565321532291](C:\Users\Administrator\AppData\Roaming\Typora\typora-user-images\1565321532291.png)
+![1565327592223](mongodb.assets/1565327592223.png)
 
 **SpringBoot集成MongoDB**
 

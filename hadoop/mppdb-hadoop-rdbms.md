@@ -1,6 +1,6 @@
 ### MPPDB、Hadoop与传统数据库技术对比与适用场景
 
-![1565325161406](C:\Users\Administrator\AppData\Roaming\Typora\typora-user-images\1565325161406.png)
+![1565327550719](mppdb-hadoop-rdbms.assets/1565327550719.png)
 
 综合而言，Hadoop和MPP两种技术的特定和适用场景为：
 

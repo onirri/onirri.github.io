@@ -5,7 +5,7 @@
 
 ​      消息发送时都被发送到一个topic，其本质就是一个目录，而topic由是由一些Partition Logs(分区日志)组成,其组织结构如下图所示：
 
-![1565326724334](C:\Users\Administrator\AppData\Roaming\Typora\typora-user-images\1565326724334.png)
+![1565327500172](README.assets/1565327500172.png)
 
 ​        我们可以看到，每个Partition中的消息都是有序的，生产的消息被不断追加到Partition log上，其中的每一个消息都被赋予了一个唯一的offset值。 
 
