@@ -1,12 +1,12 @@
 ### SpringBoot整合Kafka
 
 #### 准备工作
-    
+
 1. 提前启动zk，kafka，并且创建一个Topic，具体参照[kafka安装使用](/README.md)
-    
+   
 2. Maven依赖
 
-```
+```xml
 		<dependency>
 			<groupId>org.springframework.kafka</groupId>
 			<artifactId>spring-kafka</artifactId>
@@ -17,11 +17,11 @@
 
 ```
 为了更加体现实际开发需求，一般生产者都是在调用某些接口的服务处理完逻辑之后然后往kafka里面扔数据，然后有一个消费者不停的监控这个Topic，然后处理数据，所以这里把生产者作为一个接口，消费者放到kafka这个目录下，注意@Component注解，不然扫描不到@KafkaListener
-```    
+```
 
 ##### SpringBoot配置文件(application.yml)
 
-```
+```yaml
 spring:
   kafka:
     bootstrap-servers: 192.168.0.102:9092
@@ -37,7 +37,7 @@ spring:
 ```
 ##### 生成者
 
-```
+```java
 package com.sxsoft.testkafka.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -66,7 +66,7 @@ public class TestKafkaProducerController {
 
 ##### 消费者
 
-```
+```java
 package com.sxsoft.testkafka;
 
 import org.apache.kafka.clients.consumer.ConsumerRecord;

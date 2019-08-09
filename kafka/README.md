@@ -31,13 +31,13 @@
 
 启动zookeeper（启动前需要修改zookeeper.properties中dataDir设置）
 
-```
+```bash
 zookeeper-server-start.bat ../../config/zookeeper.properties
 ```
 
 启动kafka Server（启动前需要修改server.properties中log.dirs设置）
 
-```
+```bash
 kafka-server-start.bat ../../config/server.properties
 ```
 伪集群方式
@@ -82,23 +82,23 @@ zookeeper.properties
 
 创建一个nginxlog的topic
 
-```
+```sh
 kafka-topics.bat --create --topic nginxlog --partitions 1 --replication-factor 1 --zookeeper localhost:2181
 ```
 
 查看topic
 
-```
+```bash
 kafka-topics.bat --describe --topic nginxlog --zookeeper localhost:2181 
 ```
 启动消息生产者，将消息发送到kafka的topic上
 
-```
+```bash
 kafka-console-producer.bat --broker-list localhost:9092 --topic nginxlog
 ```
 
 启动消息消费者
-```
+```bash
 kafka-console-consumer.bat --bootstrap-server localhost:9092 --topic nginxlog --from-beginning
 ```
 
