@@ -11,3 +11,5 @@
 5. [Web服务器相关知识](/webserver/)
 6. [大数据相关知识](/hadoop/)
 
+7. [DevOps相关知识](/devops/)
+
