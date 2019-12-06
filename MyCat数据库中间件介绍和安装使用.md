@@ -18,7 +18,7 @@
 
 ​     下面我们来看看MyCat的系统部署图，数据表被水平切分成6个分片，分别存储在3台主机上，对应用服务器上的应用来说，应用只看到的是一张表。不会关心不同主机数据的聚合，数据源的切换和事务的处理。
 
-![image-20191206105908309](E:\Creative\onirri.github.io\images\image-20191206105908309.png)
+![image-20191206105908309](images/image-20191206105908309.png)
 
 ## 二. Mycat的安装和配置
 
@@ -32,21 +32,21 @@
 
 ​    这里后台数据库我使用MySQL，当然后台数据库还可以使用Oracle，SQL Server，DB2。我在一台主机上添加了db1和db2两个数据库，每个数据库下都有一张sys_user。
 
-​    ![image-20191206112808241](E:\Creative\onirri.github.io\images\image-20191206112808241.png)
+​    ![image-20191206112808241](images/image-20191206112808241.png)
 
 ​    db1数据库表的数据如下：
 
-​    ![image-20191206113053354](E:\Creative\onirri.github.io\images\image-20191206113053354.png)
+​    ![image-20191206113053354](images/image-20191206113053354.png)
 
 ​    db2数据库表的数据如下：
 
-![image-20191206113127707](E:\Creative\onirri.github.io\images\image-20191206113127707.png)
+![image-20191206113127707](images/image-20191206113127707.png)
 
 ### **2. Mycat的配置**
 
 #### 2.1 Mycat的系统结构和组件介绍
 
-![](E:\Creative\onirri.github.io\images\13553988-2a982caabfdef4bb.png)
+![](images/13553988-2a982caabfdef4bb.png)
 
 1. schema：逻辑库，与MySQL中的Database（数据库）对应，一个逻辑库中定义了所包括的Table。 
 
@@ -158,12 +158,12 @@
 
 配置完后，点击bin/startup_nowrap.bat运行Mycat Server。运行如下：
 
-![image-20191206125649775](E:\Creative\onirri.github.io\images\image-20191206125649775.png)
+![image-20191206125649775](images/image-20191206125649775.png)
 
 使用Navicat测试，首先配置一个连接，端口号是8066，用户名和密码就是在server.xml中配置的用户名和密码。
 
-![image-20191206125757799](E:\Creative\onirri.github.io\images\image-20191206125757799.png)
+![image-20191206125757799](images/image-20191206125757799.png)
 
 连接TESTDB逻辑库，查询sys_user逻辑表，从这里可以看到逻辑表中包含了2个分片的数据。
 
-![image-20191206125835441](E:\Creative\onirri.github.io\images\image-20191206125835441.png)
+![image-20191206125835441](images/image-20191206125835441.png)
