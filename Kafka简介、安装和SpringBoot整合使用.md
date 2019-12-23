@@ -90,12 +90,12 @@ kafka-console-consumer.bat --bootstrap-server localhost:9092 --topic nginxlog --
 
 2. SpringBoot项目中添加Maven依赖
 
-		```xml
-	<dependency>
-			<groupId>org.springframework.kafka</groupId>
-			<artifactId>spring-kafka</artifactId>
-	</dependency>
-	```
+```xml
+<dependency>
+	<groupId>org.springframework.kafka</groupId>
+	<artifactId>spring-kafka</artifactId>
+</dependency>
+```
 
 **具体实现**
 
