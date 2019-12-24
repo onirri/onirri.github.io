@@ -6,4 +6,6 @@
 
 1. [Kafka简介、安装和SpringBoot整合使用](/Kafka简介、安装和SpringBoot整合使用.md)
 2. [MyCat数据库中间件介绍和安装使用](MyCat数据库中间件介绍和安装使用.md)
+3. [CentOS下Hadoop3.2的伪分布式和集群安装](CentOS下Hadoop3.2的伪分布式和集群安装.md)
+4. [CentOS下Docker的安装和常用镜像安装](CentOS下Docker的安装和常用镜像安装.md)
 
