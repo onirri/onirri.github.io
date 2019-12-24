@@ -8,4 +8,6 @@
 2. [MyCat数据库中间件介绍和安装使用](MyCat数据库中间件介绍和安装使用.md)
 3. [CentOS下Hadoop3.2的伪分布式和集群安装](CentOS下Hadoop3.2的伪分布式和集群安装.md)
 4. [CentOS下Docker的安装和常用镜像安装](CentOS下Docker的安装和常用镜像安装.md)
+5. [CentOS下安装MongoDB并与SpringBoot集成](CentOS下安装MongoDB并与SpringBoot集成.md)
+6. [DevOps介绍和Jenkins环境搭建](DevOps介绍和Jenkins环境搭建.md)
 
