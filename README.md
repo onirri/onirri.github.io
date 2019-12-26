@@ -11,4 +11,5 @@
 5. [CentOS下安装MongoDB并与SpringBoot集成](CentOS下安装MongoDB并与SpringBoot集成.md)
 6. [DevOps介绍和Jenkins环境搭建](DevOps介绍和Jenkins环境搭建.md)
 7. [Hadoop的生态系统介绍](Hadoop的生态系统介绍.md)
+8. [Hadoop简介和架构分析](Hadoop简介和架构分析.md)
 
