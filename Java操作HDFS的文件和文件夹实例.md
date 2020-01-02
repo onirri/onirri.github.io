@@ -23,7 +23,13 @@
         </dependency>
 ```
 
-### 2.2 测试代码
+### 2.2 添加Hadoop的配置文件
+
+​    把Hadoop集群中Master的core-site.xml和hdfs-site.xml文件复制到Maven项目的resources目录下。
+
+![image-20200102154840059](images/image-20200102154840059.png)
+
+### 2.3 测试代码
 
 ```java
 import org.apache.hadoop.conf.Configuration;
