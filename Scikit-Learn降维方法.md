@@ -202,7 +202,6 @@ plt.show()
 ## 3 参考资料
 
 1. [主成分分析（PCA）原理总结](https://www.cnblogs.com/pinard/p/6239403.html)
-2. [scikit-learn使用PCA降维小结](https://www.cnblogs.com/konatasick/p/10042924.html)
 
 ## 4 练习
 1. https://www.jianshu.com/p/4298934e4a8e
