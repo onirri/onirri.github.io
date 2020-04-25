@@ -99,7 +99,11 @@ $ source /etc/profile
      <property>
          <name>fs.defaultFS</name>
          <value>hdfs://hadoop-master:9000</value>
-     </property> 
+     </property>
+     <property>
+         <name>hadoop.tmp.dir</name>
+         <value>/var/hadoop</value>
+     </property  
    </configuration>
    ```
 
