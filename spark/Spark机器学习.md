@@ -2,7 +2,13 @@
 
 ## 1. 介绍
 
-### 1.1 官方介绍
+### 1.1 机器学习常用算法
+
+![img](images/153965315_1_20190211031316914.jpg)
+
+参考文献：https://m.baidu.com/ala/c/www.360doc.cn/mip/814245361.html
+
+### 1.2 Spark机器学习库官方介绍
 
 官方文档：http://spark.apache.org/docs/latest/ml-guide.html
 
@@ -14,7 +20,7 @@ MLlib is Spark’s machine learning (ML) library. Its goal is to make practical 
 - Persistence: saving and load algorithms, models, and Pipelines
 - Utilities: linear algebra, statistics, data handling, etc.
 
-### 1.2 Spark机器学习库构成
+### 1.3 Spark机器学习库构成
 
 Spark 机器学习库目前分为两个包：spark.mllib、spark.ml。
 
@@ -46,7 +52,7 @@ spark.ml 则提供了基于 DataFrames 高层次的 API，可以用来构建机�
 
 实用功能：如线性代数、统计相关的计算实现
 
-### 1.3 ml和mllib的主要区别和联系
+### 1.4 ml和mllib的主要区别和联系
 
 - ml和mllib都是Spark中的机器学习库，目前常用的机器学习功能2个库都能满足需求。
 
@@ -95,7 +101,11 @@ MLib其实就是将数据以RDD的形式进行表示，在分布式数据集上�
 MLlib中包含能够在集群上运行良好的并行算法，如kmeans、分布式RF、交替最小二乘等，这能够让MLib中的每个算法都能够适用于大规模数据集
 也可以将同一算法的不同参数列表通过parallelize()，在不同节点上运行，最终找到性能最好的一组参数，这可以节省小规模数据集上参数选择的时间。
 
+
+
 #### 2.2.3 对垃圾邮件进行分类
+
+https://napsterinblue.github.io/notes/spark/machine_learning/spam_classifier_mllib/
 
 使用基于SGD的LR完成分类任务
 
@@ -187,36 +197,204 @@ hashingTF可以一次只运行在一个文档中，也可以运行于整个RDD�
 
 ```python
 from pyspark.mllib.feature import HashingTF
+from pyspark import SparkContext
 
+sc = SparkContext()
 sentence = "hello world hello test"
 words = sentence.split(" ")
-tf = HashingTF(10000) # 构建一个向量，S=10000
-vec1 = tf.transform( words )
-print( vec1 )
+tf = HashingTF(10000)  # 构建一个向量，S=10000
+vec1 = tf.transform(words)
+print(vec1)
 
-rdd = sc.wholeTextFiles("file:///home/hadoop/code/spark/files").map(lambda content: content[1].split(" "))
-vec2 = tf.transform( rdd ) # 对整个RDD对象进行转换，生成TF
-print( vec2.collect() )
+rdd = sc.wholeTextFiles("datas").map(lambda content: content[1].split(" "))
+vec2 = tf.transform(rdd)  # 对整个RDD对象进行转换，生成TF
+print(vec2.collect())
 ```
 
 **注意：在上面的转换中，由于wholeTextFiles中的每个元素val是一个tuple，`val[0]`是文件名，`val[1]`是文件内容，因此在map的时候，需要注意lambda表达式的写法**
 
-```
+```python
 from pyspark.mllib.feature import HashingTF, IDF
-rdd = sc.wholeTextFiles("file:///home/hadoop/code/spark/files").map(lambda content: content[1].split(" "))
+from pyspark import SparkContext
+
+sc = SparkContext()
+rdd = sc.wholeTextFiles("datas").map(lambda content: content[1].split(" "))
 tf = HashingTF()
 
 # 因为这里的tfVec使用了2次，因此可以cache一下
-
-tfVec = tf.transform(rdd).cache()# collect()
+tfVec = tf.transform(rdd).cache()  # collect()
 
 idf = IDF()
-idfModel = idf.fit( tfVec )
-tfIdfVec = idfModel.transform( tfVec )
-print( tfIdfVec.take(2) )
+idfModel = idf.fit(tfVec)
+tfIdfVec = idfModel.transform(tfVec)
+print(tfIdfVec.take(2))
 ```
 
 **注意：使用cache可以将RDD对象放入内存中(sotrage level是StorageLevel.MEMORY_ONLY)，使用persist可以指定storage level**
+
+#### 2.2.7 对数据进行缩放
+
+可以使用StandScaler对数据进行缩放，下面的example是将数据的所有特征的平均值转化为0，方差转化为1。
+mllib中将每一行视作一个特征，即每次操作时，都是对矩阵中的每一行的数据进行缩放
+
+```python
+from pyspark.mllib.feature import StandardScaler
+from pyspark import SparkContext
+from pyspark.mllib.linalg import Vectors
+
+sc = SparkContext()
+vec = Vectors.dense([[-1, 5, 1], [2, 0, 1]])
+print(vec)
+dataset = sc.parallelize(vec)
+scaler = StandardScaler(withMean=True, withStd=True)
+model = scaler.fit(dataset)
+result = model.transform(dataset).collect()
+print(result)
+
+输出：
+[[-1.  5.  1.],[2. 0. 1.]]
+[DenseVector([-0.7071, 0.7071, 0.0]), DenseVector([0.7071, -0.7071, 0.0])]
+```
+
+使用Normalizer可以使得数据的L-p范数转化为1，这个在归一化以及预测概率等时常用，默认是L2范数，也可以自己指定
+```python
+from pyspark.mllib.feature import Normalizer
+from pyspark import SparkContext
+from pyspark.mllib.linalg import Vectors
+
+sc = SparkContext()
+vec = Vectors.dense([[3, 4], [5, 5], [6, 8]])
+data = sc.parallelize(vec)
+normalizer = Normalizer()
+result = normalizer.transform(data)
+print(result.collect())
+
+输出：
+[DenseVector([0.6, 0.8]), DenseVector([0.7071, 0.7071]), DenseVector([0.6, 0.8])]
+```
+#### 2.2.8 统计
+
+mllib提供了很多广泛的统计函数，统计函数是对每一列进行处理
+
+```python
+from pyspark.mllib.stat import Statistics
+from pyspark import SparkContext
+from pyspark.mllib.linalg import Vectors
+
+sc = SparkContext()
+vec = Vectors.dense([[3, 4], [5, 5], [6, 8]])
+data = sc.parallelize(vec)
+stat = Statistics.colStats(data)
+print(stat.mean(), stat.variance())
+
+输出：
+[4.66666667 5.66666667] [2.33333333 4.33333333]
+```
+
+#### 2.2.9 线性回归
+
+在mllib.regression
+对于这种问题，最好需要将其归一化，否则SGD求解很容易发散。对于下面的例子，如果将X，即特征的范围取得非常大(比如下面range里面设置最大值为20之类的)，则求得的解很有可能就会发散。
+除此之外，也有Lasso等加入正则化方法的线性回归
+
+```python
+import matplotlib.pyplot as plt
+import random as rnd
+import numpy as np
+from pyspark.mllib.regression import LabeledPoint, LinearRegressionWithSGD, LassoWithSGD
+from pyspark import SparkContext
+
+x = np.linspace(0, 4, 20)
+y = 2 * x + 2 + 4 * np.random.random(x.shape) - 2
+
+sc = SparkContext()
+data = sc.parallelize(np.column_stack((x, y)))
+
+labeledData = data.map(lambda d: LabeledPoint(d[1], d[0:1]))
+model = LinearRegressionWithSGD.train(labeledData, iterations=100, intercept=True)
+y_pred = model.predict(np.array(x).reshape(1, -1))
+
+#获取特征权重，及干扰特征
+print("weights : %s, intercept : %s" % (model.weights, model.intercept))
+
+plt.plot(x, y, 'k*', label="real")
+plt.plot(x, y_pred, 'g--', label="pred with intercept")
+plt.show()
+
+输出：
+weights : [1.960302173749138], intercept : 1.7728141318262047
+```
+![这里写图片描述](images/20180326230822929.png)
+
+#### 2.2.10 Logistic Regression
+
+LR用于监督式分类问题，可以使用SGD等方法对LR进行训练，
+clearThreshold之后，LR会输出原始概率，也可以设置概率阈值，直接输出分类结果
+
+```python
+from pyspark.mllib.classification import LogisticRegressionWithSGD
+from pyspark.mllib.regression import LabeledPoint
+from pyspark import SparkContext
+
+sc = SparkContext()
+data = [LabeledPoint(0.0, [0.0, 1.0]), LabeledPoint(1.0, [1.0, 0.0])]
+lrm = LogisticRegressionWithSGD.train(sc.parallelize(data), iterations=20)
+print(lrm.predict([1, 0]))
+lrm.clearThreshold()
+print(lrm.predict([1, 0]))
+lrm.setThreshold(0.5)
+print(lrm.predict([1, 0]))
+
+输出：
+1
+0.7763929145707635
+1
+```
+
+#### 2.2.11 聚类任务
+
+MLlib中包含kmeans以及kmeans||两种算法，后者可以为并行化环境提供更好的初始化策略。除了聚类的目标数量K之外，还包括以下几个超参数
+initializationMode：初始化聚类中心的方法，可以是kmeans||或者random。kmeans||的效果一般更好，但是更加耗时
+maxIterations：最大迭代次数，默认为100
+runs：算法并发运行的数目，mllib的kmeans支持从多个起点并发执行，然后选择最佳的结果。
+下面的代码中，首先训练一个kmeans模型，然后对其分类结果进行可视化
+
+```python
+from pyspark.mllib.clustering import KMeans
+import matplotlib.pyplot as plt
+import numpy as np
+from pyspark import SparkContext
+
+data = 2 * np.random.random((30, 2))
+data[10:20, :] = data[10:20, :] + 4
+data[20:, :] = data[20:, :] + 8
+
+plt.plot(data[:, 0], data[:, 1], 'r+')
+plt.show()
+
+sc = SparkContext()
+rddData = sc.parallelize(data)
+model = KMeans.train(rddData, 3, maxIterations=100, initializationMode="kmeans||",
+                     seed=50, initializationSteps=5, epsilon=1e-4)
+```
+
+
+![这里写图片描述](images/20180326230830552.png)
+
+```python
+result = np.zeros((data.shape[0], ))
+for ii in range( data.shape[0] ):
+    result[ii] = model.predict( data[ii,:] )
+colors = ["r+", "b+", "g+"]
+for ii in range(3):
+    plt.plot( data[result == ii, 0], data[result == ii, 1], colors[ii] )
+
+plt.show()
+```
+
+![这里写图片描述](images/20180326230839131.png)
+
+
 
 ## 3.ml库
 
@@ -472,6 +650,11 @@ https://www.cnblogs.com/mrchige/p/6346601.html?utm_source=itdadao
 ## 5.参考文献
 
 1. MLlib基本使用：https://blog.csdn.net/u012526003/article/details/79706051
-2. MLlib婴儿生存率预测：https://github.com/edyoda/pyspark-tutorial/blob/master/PySpark-MlLib.ipynb
+
+2. MLlib婴儿生存率预测：https://blog.csdn.net/weixin_39599711/article/details/79085329 
+
+   源代码：https://github.com/edyoda/pyspark-tutorial/blob/master/PySpark-MlLib.ipynb
+
 3. pySpark 机器学习库ml入门：https://www.jianshu.com/p/20456b512fa7
+
 4. ml婴儿生存率预测：https://github.com/edyoda/pyspark-tutorial/blob/master/PySpark-ML.ipynb
