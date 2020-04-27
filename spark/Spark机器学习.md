@@ -101,8 +101,6 @@ MLib其实就是将数据以RDD的形式进行表示，在分布式数据集上�
 MLlib中包含能够在集群上运行良好的并行算法，如kmeans、分布式RF、交替最小二乘等，这能够让MLib中的每个算法都能够适用于大规模数据集
 也可以将同一算法的不同参数列表通过parallelize()，在不同节点上运行，最终找到性能最好的一组参数，这可以节省小规模数据集上参数选择的时间。
 
-
-
 #### 2.2.3 对垃圾邮件进行分类
 
 https://napsterinblue.github.io/notes/spark/machine_learning/spam_classifier_mllib/
@@ -150,43 +148,63 @@ print( "Prediction for negative test example : %g" % model.predict(negTest) )
 
 #### 2.2.4 MLlib中的数据类型
 
-Vector：在mllib.linalg.vectors中，既支持稠密向量，也支持稀疏向量
-LabeledPoint：在mllib.regression中，用于监督学习算法中，表示带有标签的数据点
-Rating：在mllib.recommendation中，用于产品推荐，表示用户对一个产品的打分
-各种Label类：每个Model都是训练算法的结果，可以用train进行训练，用predict进行预测
+Vector
 
-#### 2.2.5 Vectors
-
-对于denseVector，MLlib可以通过Vectors.dense直接创建，也可以直接将numpy.array传递给Vectors，生成dense Vector
-对于sparseVector，首先设置其大小，然后传入一个包含index和value的dict或者是2个列表，分别表示indexes与value
-sparseVector与denseVector都可以转化为array，array可以转化为denseVector，sparseVector不能直接转化为denseVector。
-需要注意：array与denseVector都不能直接转化为sparseVector
-参考链接：http://www.cnblogs.com/zhangbojiangfeng/p/6115263.html
+- 一个本地向量（Local Vector）。索引是从0开始的，并且是整型。而值为 Double 类型，存储于单个机器内。
+- MLlib既支持稠密向量也支持稀疏向量，前者表示向量的每一位都存储，后者只存储非零位以节约空间。
+- 向量可以通过mllib.linalg.Vectors类创建
 
 ```python
-import numpy as np
-from pyspark.mllib.linalg import Vectors
-
-denseVec1 = np.array( [1, 2, 3] )
-denseVec2 = Vectors.dense( [4,5,6] )
-print( denseVec2 )
-denseVec2 = denseVec1
-print( denseVec2 )
-
-# print( Vectors.sparse(denseVec2) ) # 会出错，因为无法直接转换
-
-sparseVec1 = Vectors.sparse(4, {0:1.0, 2:2.0})
-sparseVec2 = Vectors.sparse( 4, [0,2], [1.0, 3.0] )
-print( sparseVec1.toArray() ) # 可以转化为array，也支持下标访问
+>>> from pyspark.mllib.linalg import Vectors
+>>> den = Vectors.dense([1.0,2.0,3.0])
+>>> den
+DenseVector([1.0, 2.0, 3.0])
+>>> spa = Vectors.sparse(4,[0,2],[1.0,2.0])
+>>> spa
+SparseVector(4, {0: 1.0, 2: 2.0})
 ```
 
-```
-[4.0,5.0,6.0] 
-[1 2 3] 
-[1. 0. 2. 0.]
+LabeledPoint
+
+- 在分类和回归之类的监督式学习（supervised learning）算法中使用。
+- LabeledPoint表示带标签的数据点，包括一个特征向量与一个标签（由一个浮点数表示）。
+- 位于mllib.regression包中
+
+```python
+>>> from pyspark.mllib.regression import LabeledPoint
+>>> from pyspark.mllib.linalg import Vectors
+>>> pos = LabeledPoint(1.0,Vectors.dense([1.0,2.0,3.0]))
+>>> neg = LabeledPoint(0.0,Vectors.dense([1.0,2.0,3.0]))
 ```
 
-#### 2.2.6 特征提取
+Matrix
+
+- 矩阵分为稠密矩阵和稀疏矩阵
+- 稠密矩阵的实体值以列为主要次序的形式，存放于单个 Double 型数组内。稀疏矩阵的非零实体以列为主要次序的形式，存放于压缩稀疏列（Compressed Sparse Column, CSC）中。例如，下面这个稠密矩阵就是存放在一维数组 [1.0, 3.0, 5.0, 2.0, 4.0, 6.0] 中，矩阵的大小为 (3, 2) 。
+- 本地矩阵的基类是 Matrix 类，在 Spark 中有其两种实现，分别是 DenseMatrix 和 SparseMatrix 。官方文档中推荐使用 已在 Matrices 类中实现的工厂方法来创建本地矩阵。需要注意的是，MLlib 中的本地矩阵是列主序的（column-major）
+
+```python
+from pyspark.mllib.linalg import Matrices
+
+denseMatrix = Matrices.dense(3, 2, [1.0, 3.0, 5.0, 2.0, 4.0, 6.0])
+print(denseMatrix)
+
+sparseMatrix = Matrices.sparse(3, 3, [0, 2, 3, 6], [0, 2, 1, 0, 1, 2], [1.0, 2.0, 3.0,4.0,5.0,6.0])
+print(sparseMatrix)
+```
+
+Rating
+
+- 用于产品推荐
+- 表示用户对一个产品的评分
+- 位于mllib.recommendation包中
+
+各种Model类（模型）
+
+- 每个Model都是训练算法的结果
+- 模型一般都有一个predict()方法，使用该模型对新的数据点或数据点组成的RDD进行预测。
+
+#### 2.2.5 特征提取
 
 特征提取主要是在mllib.feature中
 
@@ -232,7 +250,7 @@ print(tfIdfVec.take(2))
 
 **注意：使用cache可以将RDD对象放入内存中(sotrage level是StorageLevel.MEMORY_ONLY)，使用persist可以指定storage level**
 
-#### 2.2.7 对数据进行缩放
+#### 2.2.6 对数据进行缩放
 
 可以使用StandScaler对数据进行缩放，下面的example是将数据的所有特征的平均值转化为0，方差转化为1。
 mllib中将每一行视作一个特征，即每次操作时，都是对矩阵中的每一行的数据进行缩放
@@ -272,7 +290,7 @@ print(result.collect())
 输出：
 [DenseVector([0.6, 0.8]), DenseVector([0.7071, 0.7071]), DenseVector([0.6, 0.8])]
 ```
-#### 2.2.8 统计
+#### 2.2.7 统计
 
 mllib提供了很多广泛的统计函数，统计函数是对每一列进行处理
 
@@ -291,7 +309,7 @@ print(stat.mean(), stat.variance())
 [4.66666667 5.66666667] [2.33333333 4.33333333]
 ```
 
-#### 2.2.9 线性回归
+#### 2.2.8 线性回归
 
 在mllib.regression
 对于这种问题，最好需要将其归一化，否则SGD求解很容易发散。对于下面的例子，如果将X，即特征的范围取得非常大(比如下面range里面设置最大值为20之类的)，则求得的解很有可能就会发散。
@@ -326,7 +344,7 @@ weights : [1.960302173749138], intercept : 1.7728141318262047
 ```
 ![这里写图片描述](images/20180326230822929.png)
 
-#### 2.2.10 Logistic Regression
+#### 2.2.9 Logistic Regression
 
 LR用于监督式分类问题，可以使用SGD等方法对LR进行训练，
 clearThreshold之后，LR会输出原始概率，也可以设置概率阈值，直接输出分类结果
@@ -351,7 +369,7 @@ print(lrm.predict([1, 0]))
 1
 ```
 
-#### 2.2.11 聚类任务
+#### 2.2.10 聚类任务
 
 MLlib中包含kmeans以及kmeans||两种算法，后者可以为并行化环境提供更好的初始化策略。除了聚类的目标数量K之外，还包括以下几个超参数
 initializationMode：初始化聚类中心的方法，可以是kmeans||或者random。kmeans||的效果一般更好，但是更加耗时
