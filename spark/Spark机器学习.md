@@ -148,7 +148,7 @@ print( "Prediction for negative test example : %g" % model.predict(negTest) )
 
 #### 2.2.4 MLlib中的数据类型
 
-Vector
+**Vector**
 
 - 一个本地向量（Local Vector）。索引是从0开始的，并且是整型。而值为 Double 类型，存储于单个机器内。
 - MLlib既支持稠密向量也支持稀疏向量，前者表示向量的每一位都存储，后者只存储非零位以节约空间。
@@ -164,7 +164,7 @@ DenseVector([1.0, 2.0, 3.0])
 SparseVector(4, {0: 1.0, 2: 2.0})
 ```
 
-LabeledPoint
+**LabeledPoint**
 
 - 在分类和回归之类的监督式学习（supervised learning）算法中使用。
 - LabeledPoint表示带标签的数据点，包括一个特征向量与一个标签（由一个浮点数表示）。
@@ -177,7 +177,7 @@ LabeledPoint
 >>> neg = LabeledPoint(0.0,Vectors.dense([1.0,2.0,3.0]))
 ```
 
-Matrix
+**Matrix**
 
 - 矩阵分为稠密矩阵和稀疏矩阵
 - 稠密矩阵的实体值以列为主要次序的形式，存放于单个 Double 型数组内。稀疏矩阵的非零实体以列为主要次序的形式，存放于压缩稀疏列（Compressed Sparse Column, CSC）中。例如，下面这个稠密矩阵就是存放在一维数组 [1.0, 3.0, 5.0, 2.0, 4.0, 6.0] 中，矩阵的大小为 (3, 2) 。
@@ -193,13 +193,13 @@ sparseMatrix = Matrices.sparse(3, 3, [0, 2, 3, 6], [0, 2, 1, 0, 1, 2], [1.0, 2.0
 print(sparseMatrix)
 ```
 
-Rating
+**Rating**
 
 - 用于产品推荐
 - 表示用户对一个产品的评分
 - 位于mllib.recommendation包中
 
-各种Model类（模型）
+**各种Model类（模型）**
 
 - 每个Model都是训练算法的结果
 - 模型一般都有一个predict()方法，使用该模型对新的数据点或数据点组成的RDD进行预测。
@@ -358,8 +358,10 @@ sc = SparkContext()
 data = [LabeledPoint(0.0, [0.0, 1.0]), LabeledPoint(1.0, [1.0, 0.0])]
 lrm = LogisticRegressionWithSGD.train(sc.parallelize(data), iterations=20)
 print(lrm.predict([1, 0]))
+
 lrm.clearThreshold()
 print(lrm.predict([1, 0]))
+
 lrm.setThreshold(0.5)
 print(lrm.predict([1, 0]))
 

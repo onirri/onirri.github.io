@@ -8,15 +8,15 @@
 
    c. 强化学习
 
-   d. 自我习
+   d. 自我学习
 
  
 
 2. 目前机器学习主流分为
-  a. 监督学习
-  b. 无监督学习
-  c. 强化学习
-  d. 自我学习
+    a. 监督学习
+    b. 无监督学习
+    c. 强化学习
+    d. 自我学习
 
   
 
@@ -28,43 +28,43 @@
 
 
 4. 机器学习(Machine Learning, ML)是一门多领域交叉学科，涉及概率论、统计学、逼近论、凸分析、算法复杂度理论等多门学科。
-  a. True
-  b. False
+    a. True
+    b. False
 
   
 
 5. 数据预处理包括数据的清洗、数据的转换、数据标准化、缺失值的处理、特征的提取、数据的降维等方面。
-  a. True
-  b. False
+    a. True
+    b. False
 
   
 
 6. 什么分为分类树和回归树
-  a. 线性回归
-  b. 回归树
-  c. 深度学习
-  d. 逻辑回归
+    a. 线性回归
+    b. 回归树
+    c. 深度学习
+    d. 逻辑回归
 
   
 
 
 7. Spark MLib机器学习库的目标是让机器学习具有可扩展性并且变得容易。
-  a. True
-  b. False
+    a. True
+    b. False
 
   
 
 8. 在 Spark 3.x 发行版本中， MLlib 将向基于 DataFrames 的 API 添加功能，以达到与基于 RDD 的 API 的功能奇偶校验。
-  a. True
-  b. False
+    a. True
+    b. False
 
   
 
 9. 什么提供常用的学习算法，如分类，回归，聚类和协同过滤。
-  a. ML Algorithms
-  b. Featurization
-  c. Pipelines
-  d. Utilities
+    a. ML Algorithms
+    b. Featurization
+    c. Pipelines
+    d. Utilities
 
   
 
