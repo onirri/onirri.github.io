@@ -29,4 +29,13 @@
 
 ## 5.Spark
 
+### 5.1 讲义
+
 1. [Spark机器学习](spark/Spark机器学习.md)
+
+
+
+### 5.2 练习题
+
+1. [Spark Streaming习题](spark/Spark_Streaming习题.md)
+2. [Spark机器学习习题](spark/Spark机器学习习题.md)
