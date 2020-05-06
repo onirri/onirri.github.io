@@ -141,7 +141,7 @@
    
    ![img](images/20190310212523459.png)
    
-   输出
+   
 
 ## 4.Adaboost算法
 
@@ -164,7 +164,7 @@ Adaboost是一种迭代算法，其核心思想是针对同一个训练集训练
 
 这里我们用一个具体的例子来讲解AdaBoostClassifier的使用。
 
-完整代码参见我的github: https://github.com/ljpzzz/machinelearning/blob/master/ensemble-learning/adaboost-classifier.ipynb
+完整代码参见github: https://github.com/ljpzzz/machinelearning/blob/master/ensemble-learning/adaboost-classifier.ipynb
 
 首先我们载入需要的类库：
 
@@ -311,9 +311,60 @@ Score: 0.961111111111
 
 　　　　此时的拟合分数和我们最初的300弱分类器，0.8步长的拟合程度相当。也就是说，在我们这个例子中，如果步长从0.8降到0.7，则弱分类器个数要从300增加到700才能达到类似的拟合效果。
 
-## 5.参考资料
+## 5. 投票分类器(Voting Classifiers)
 
-1.sklearn集成学习：https://blog.csdn.net/qq_39751437/article/details/86566864
+定义：对于一个训练集，有很多分类器，比如说Logistic、KNN、SVM等。对于一个样本，我们给出所有分类器的分类结果，然后利用这个结果对样本的分类进行预测
 
-2.随机森林：https://blog.csdn.net/yxc9681/article/details/88383974
+- hard voting classifier ：不考虑分类器的差别，比如说他们的准确性等，直接取投票数最多的类别，将其作为我们最后的对于该样本的分类结果
+
+- soft voting classifier：利用所有分类器给出的各个类别的概率，最后利用各个类别的概率之和进行预测，doft voting的准确率要略微高于hard voting，因为它考虑了每个模型的不同
+
+在很多情况下，投票分类器的精度会比集合里最好的分类器的精度还要高(对于大多数测试集)，因为这种集成方法提高了模型的鲁棒性。
+当集成方法中的基学习器之间互相独立时，集成方法的效果会更好
+
+```python
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.ensemble import VotingClassifier
+from sklearn.linear_model import LogisticRegression
+from sklearn.svm import SVC
+from sklearn.model_selection import train_test_split
+from sklearn.datasets import make_moons
+from sklearn.metrics import accuracy_score
+
+# 导入数据
+X, y = make_moons(n_samples=500, noise=0.30, random_state=42)
+X_train, X_test, y_train, y_test = train_test_split(X, y, random_state=42)
+
+# 三个基学习器
+log_clf = LogisticRegression()
+rf_clf = RandomForestClassifier()
+svm_clf = SVC()
+# 投票分类器
+voting_clf = VotingClassifier( estimators=[("lr", log_clf), ("rf", rf_clf), ("svc", svm_clf)], voting="hard" )
+# voting_clf.fit( X_train, y_train )
+
+for clf in ( log_clf, rf_clf, svm_clf, voting_clf ):
+    clf.fit( X_train, y_train )
+    y_pred = clf.predict( X_test )
+    print( clf.__class__.__name__, accuracy_score(y_test, y_pred) )
+```
+
+输出：
+```python
+LogisticRegression 0.864
+RandomForestClassifier 0.88
+SVC 0.888
+VotingClassifier 0.896
+```
+
+
+
+## 6.参考资料
+
+1. 使用sklearn进行集成学习——理论 https://www.cnblogs.com/jasonfreak/p/5657196.html
+
+2. 使用sklearn进行集成学习——实践 https://www.cnblogs.com/jasonfreak/p/5720137.html
+3. sklearn集成学习：https://blog.csdn.net/qq_39751437/article/details/86566864
+
+4. 随机森林：https://blog.csdn.net/yxc9681/article/details/88383974
 
