@@ -26,6 +26,7 @@
 
 1. [Scikit-Learn降维方法](scikit-learn/Scikit-Learn降维方法.md)
 2. [Scikit-Learn集成学习](scikit-learn/Scikit-Learn集成学习.md)
+3. [Scikit-Learn关联规则](scikit-learn/Scikit-Learn关联规则.md)
 
 ## 5.Spark
 
