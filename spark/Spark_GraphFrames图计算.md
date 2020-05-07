@@ -259,7 +259,7 @@ ranks.vertices.show()
 ranks.edges.show()
 ```
 
-数据下载地址: [web-Google.txt](datas/web-Google.txt) 或者http://snap.stanford.edu/data/web-Google.html
+数据下载地址: http://snap.stanford.edu/data/web-Google.html
 
 ## 5. Issue
 
