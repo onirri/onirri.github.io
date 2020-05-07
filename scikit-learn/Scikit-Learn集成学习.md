@@ -176,7 +176,6 @@ Adaboost是一种迭代算法，其核心思想是针对同一个训练集训练
 ```python
 import numpy as np
 import matplotlib.pyplot as plt
-%matplotlib inline
 from sklearn.ensemble import AdaBoostClassifier
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.datasets import make_gaussian_quantiles
@@ -196,28 +195,26 @@ y = np.concatenate((y1, - y2 + 1))
 
 我们通过可视化看看我们的分类数据，它有两个特征，两个输出类别，用颜色区别。
 
-```
+```python
 plt.scatter(X[:, 0], X[:, 1], marker='o', c=y)
 ```
 
-　　　　输出为下图：
+输出为下图：
 
-![img](https://images2015.cnblogs.com/blog/1042406/201612/1042406-20161206153456976-469590725.png)
+![image-20200507115014754](images/image-20200507115014754.png)
 
-　　　　可以看到数据有些混杂，我们现在用基于决策树的Adaboost来做分类拟合。
+可以看到数据有些混杂，我们现在用基于决策树的Adaboost来做分类拟合。
 
-```
+```python
 bdt = AdaBoostClassifier(DecisionTreeClassifier(max_depth=2, min_samples_split=20, min_samples_leaf=5),
                          algorithm="SAMME",
                          n_estimators=200, learning_rate=0.8)
 bdt.fit(X, y)
 ```
 
-　　　　这里我们选择了SAMME算法，最多200个弱分类器，步长0.8，在实际运用中你可能需要通过交叉验证调参而选择最好的参数。拟合完了后，我们用网格图来看看它拟合的区域。
+这里我们选择了SAMME算法，最多200个弱分类器，步长0.8，在实际运用中你可能需要通过交叉验证调参而选择最好的参数。拟合完了后，我们用网格图来看看它拟合的区域。
 
-[![复制代码](https://common.cnblogs.com/images/copycode.gif)](javascript:void(0);)
-
-```
+```python
 x_min, x_max = X[:, 0].min() - 1, X[:, 0].max() + 1
 y_min, y_max = X[:, 1].min() - 1, X[:, 1].max() + 1
 xx, yy = np.meshgrid(np.arange(x_min, x_max, 0.02),
@@ -230,73 +227,61 @@ plt.scatter(X[:, 0], X[:, 1], marker='o', c=y)
 plt.show()
 ```
 
-[![复制代码](https://common.cnblogs.com/images/copycode.gif)](javascript:void(0);)
+输出的图如下：
 
-　　　　输出的图如下：
+![image-20200507115048610](images/image-20200507115048610.png)
 
-![img](https://images2015.cnblogs.com/blog/1042406/201612/1042406-20161206154123460-1185191410.png)
+从图中可以看出，Adaboost的拟合效果还是不错的，现在我们看看拟合分数：
 
-　　　　从图中可以看出，Adaboost的拟合效果还是不错的，现在我们看看拟合分数：
-
-```
-print "Score:", bdt.score(X,y)
+```python
+print("Score:", bdt.score(X,y))
 ```
 
-　　　　输出为：
+输出为：
 
-```
+```shell
 Score: 0.913333333333
 ```
 
-　　　　也就是说拟合训练集数据的分数还不错。当然分数高并不一定好，因为可能过拟合。
+也就是说拟合训练集数据的分数还不错。当然分数高并不一定好，因为可能过拟合。
 
-　　　　现在我们将最大弱分离器个数从200增加到300。再来看看拟合分数。
+现在我们将最大弱分离器个数从200增加到300。再来看看拟合分数。
 
-[![复制代码](https://common.cnblogs.com/images/copycode.gif)](javascript:void(0);)
-
-```
+```python
 bdt = AdaBoostClassifier(DecisionTreeClassifier(max_depth=2, min_samples_split=20, min_samples_leaf=5),
                          algorithm="SAMME",
                          n_estimators=300, learning_rate=0.8)
 bdt.fit(X, y)
-print "Score:", bdt.score(X,y)
+print("Score:", bdt.score(X,y))
 ```
 
-[![复制代码](https://common.cnblogs.com/images/copycode.gif)](javascript:void(0);)
+此时的输出为：
 
-　　　　此时的输出为：
-
-```
+```shell
 Score: 0.962222222222
 ```
 
-　　　　这印证了我们前面讲的，弱分离器个数越多，则拟合程度越好，当然也越容易过拟合。
+这印证了我们前面讲的，弱分离器个数越多，则拟合程度越好，当然也越容易过拟合。
 
-　　　　现在我们降低步长，将步长从上面的0.8减少到0.5，再来看看拟合分数。
+现在我们降低步长，将步长从上面的0.8减少到0.5，再来看看拟合分数。
 
-[![复制代码](https://common.cnblogs.com/images/copycode.gif)](javascript:void(0);)
-
-```
+```python
 bdt = AdaBoostClassifier(DecisionTreeClassifier(max_depth=2, min_samples_split=20, min_samples_leaf=5),
                          algorithm="SAMME",
                          n_estimators=300, learning_rate=0.5)
 bdt.fit(X, y)
-print "Score:", bdt.score(X,y)
+print("Score:", bdt.score(X,y))
 ```
 
-[![复制代码](https://common.cnblogs.com/images/copycode.gif)](javascript:void(0);)
-
-　　　　此时的输出为：
+此时的输出为：
 
 ```
 Score: 0.894444444444
 ```
 
-　　　　可见在同样的弱分类器的个数情况下，如果减少步长，拟合效果会下降。
+可见在同样的弱分类器的个数情况下，如果减少步长，拟合效果会下降。
 
-　　　　最后我们看看当弱分类器个数为700，步长为0.7时候的情况：
-
-[![复制代码](https://common.cnblogs.com/images/copycode.gif)](javascript:void(0);)
+最后我们看看当弱分类器个数为700，步长为0.7时候的情况：
 
 ```
 bdt = AdaBoostClassifier(DecisionTreeClassifier(max_depth=2, min_samples_split=20, min_samples_leaf=5),
@@ -306,15 +291,13 @@ bdt.fit(X, y)
 print "Score:", bdt.score(X,y)
 ```
 
-[![复制代码](https://common.cnblogs.com/images/copycode.gif)](javascript:void(0);)
-
-　　　　此时的输出为：
+此时的输出为：
 
 ```
 Score: 0.961111111111
 ```
 
-　　　　此时的拟合分数和我们最初的300弱分类器，0.8步长的拟合程度相当。也就是说，在我们这个例子中，如果步长从0.8降到0.7，则弱分类器个数要从300增加到700才能达到类似的拟合效果。
+此时的拟合分数和我们最初的300弱分类器，0.8步长的拟合程度相当。也就是说，在我们这个例子中，如果步长从0.8降到0.7，则弱分类器个数要从300增加到700才能达到类似的拟合效果。
 
 ## 5. 投票分类器(Voting Classifiers)
 
@@ -322,7 +305,7 @@ Score: 0.961111111111
 
 - hard voting classifier ：不考虑分类器的差别，比如说他们的准确性等，直接取投票数最多的类别，将其作为我们最后的对于该样本的分类结果
 
-- soft voting classifier：利用所有分类器给出的各个类别的概率，最后利用各个类别的概率之和进行预测，doft voting的准确率要略微高于hard voting，因为它考虑了每个模型的不同
+- soft voting classifier：利用所有分类器给出的各个类别的概率，最后利用各个类别的概率之和进行预测，soft voting的准确率要略微高于hard voting，因为它考虑了每个模型的不同
 
 在很多情况下，投票分类器的精度会比集合里最好的分类器的精度还要高(对于大多数测试集)，因为这种集成方法提高了模型的鲁棒性。
 当集成方法中的基学习器之间互相独立时，集成方法的效果会更好
