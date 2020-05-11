@@ -6,8 +6,6 @@ Docker 是一个开源的应用容器引擎，可以让开发者打包他们的�
 
 Docker 从 17.03 版本之后分为 CE（社区版） 和 EE（企业版），我们用社区版就可以了。
 
-![img](images/576507-docker1.png)
-
 | 概念                   | 说明                                                         |
 | ---------------------- | ------------------------------------------------------------ |
 | Docker 镜像(Images)    | Docker 镜像是用于创建 Docker 容器的模板，比如 Ubuntu 系统。  |
@@ -87,9 +85,114 @@ $ systemctl daemon-reload
 $ systemctl restart docker
 ```
 
-## 三. Docker Image的安装
+## 三.Docker 容器使用
 
-### 3.1 Docker安装Tomcat
+### 3.1 获取镜像
+
+如果我们本地没有 ubuntu 镜像，我们可以使用 docker pull 命令来载入 ubuntu 镜像：
+
+```shell
+$ docker pull ubuntu
+```
+
+### 3.2 启动容器
+
+以下命令使用 ubuntu 镜像启动一个容器，参数为以命令行模式进入该容器：
+
+```shell
+$ docker run -it ubuntu /bin/bash
+```
+
+### 3.3 启动已停止运行的容器
+
+查看所有的容器命令如下：
+
+```shell
+$ docker ps -a
+```
+
+使用 docker start 启动一个已停止的容器：
+
+```shell
+$ docker start b750bbbcfd88 
+```
+
+### 3.4 后台运行
+
+在大部分的场景下，我们希望 docker 的服务是在后台运行的，我们可以过 **-d** 指定容器的运行模式。
+
+```shell
+$ docker run -itd --name ubuntu-test ubuntu /bin/bash
+```
+
+### 3.5 停止一个容器
+
+停止容器的命令如下：
+
+```shell
+$ docker stop <容器 ID>
+```
+
+### 3.6 进入容器
+
+在使用 **-d** 参数时，容器启动后会进入后台。此时想要进入容器，可以通过以下指令进入：
+
+- **docker attach**
+- **docker exec**：推荐大家使用 docker exec 命令，因为此退出容器终端，不会导致容器的停止。
+
+**attach 命令**
+
+下面演示了使用 docker attach 命令。
+
+```shell
+$ docker attach 1e560fca3906 
+```
+
+**注意：** 如果从这个容器退出，会导致容器的停止。
+
+**exec 命令**
+
+下面演示了使用 docker exec 命令。
+
+```shell
+$ docker exec -it 243c32535da7 /bin/bash
+```
+
+### 3.7 导出和导入容器
+
+**导出容器**
+
+如果要导出本地某个容器，可以使用 **docker export** 命令。
+
+```shell
+$ docker export 1e560fca3906 > ubuntu.tar
+```
+
+**导入容器快照**
+
+可以使用 docker import 从容器快照文件中再导入为镜像，以下实例将快照文件 ubuntu.tar 导入到镜像 test/ubuntu:v1:
+
+```shell
+$ cat docker/ubuntu.tar | docker import - test/ubuntu:v1
+```
+
+此外，也可以通过指定 URL 或者某个目录来导入，例如：
+
+```shell
+$ docker import http://example.com/exampleimage.tgz example/imagerepo
+```
+
+### 3.8 删除容器
+
+删除容器使用 **docker rm** 命令：
+
+```shell
+$ docker rm -f 1e560fca3906
+```
+
+## 四. Docker Image的安装
+
+### 4.1 Docker安装Tomcat
 
 安装Tomcat
 
@@ -103,7 +206,7 @@ docker pull tomcat
 docker run -d -p 8080:8080 --name tomcat -v /root/webapps:/usr/local/tomcat/webapps --restart=always tomcat
 ```
 
-### 3.2 Docker安装MySQL
+### 4.2 Docker安装MySQL
 
 安装MySQL 5.6
 
@@ -123,7 +226,7 @@ docker run -p 3306:3306 --name mysql -e MYSQL_ROOT_PASSWORD=123456 --restart=alw
 docker run -p 3306:3306 --name mysql -v $PWD/conf:/etc/mysql/conf.d -v $PWD/logs:/logs -v $PWD/data:/var/lib/mysql -e MYSQL_ROOT_PASSWORD=123456 --restart=always -d mysql:5.6
 ```
 
-### 3.3 Docker安装Redis
+### 4.3 Docker安装Redis
 
 安装Redis
 
@@ -143,7 +246,7 @@ docker run -p 6379:6379 --name redis -d redis redis-server --appendonly yes
 docker run -p 6379:6379 -v $PWD/data:/data  -d redis:3.2 redis-server --appendonly yes
 ```
 
-### 3.4 Docker安装RabbitMQ
+### 4.4 Docker安装RabbitMQ
 
 安装RabbitMQ，这里注意获取镜像的时候要获取***management***版本的，不要获取last版本的，***management***版本的才带有管理界面。
 
@@ -165,7 +268,7 @@ docker run -d --name rabbitmq -p 5672:5672 -p 15672:15672 -v `pwd`/data:/var/lib
 
 后台管理地址：http://ip:8080/
 
-### 3.5 Docker安装GitLab
+### 4.5 Docker安装GitLab
 
 ```bash
 $ docker pull gitlab/gitlab-ce
@@ -197,7 +300,7 @@ gitlab_rails['gitlab_shell_ssh_port'] = 222 # 此端口是run时22端口映射�
 $ ssh-keygen -t rsa -C "email@example.com"
 ```
 
-### 3.6 Docker安装Jenkins
+### 4.6 Docker安装Jenkins
 
 ```bash
 $ docker pull jenkins/jenkins
@@ -208,10 +311,42 @@ $ docker run -d -p 8080:8080 -p 50000:50000 -v /root/jenkins:/var/jenkins_home -
 
 由于国外网站无法访问，Update Site请用https://mirrors.tuna.tsinghua.edu.cn/jenkins/updates/update-center.json，有些插件自动下载安装，请手动下载，http://updates.jenkins-ci.org/download/plugins/
 
-### 3.7 Docker安装memcached
+### 4.7 Docker安装memcached
 
 ```
 docker pull memcached
 docker run -d -p 11211:11211 --name memcached memcached
 ```
 
+## 五.容器其它问题
+
+### 5.1 docker容器安装vim
+
+```shell
+mv /etc/apt/sources.list /etc/apt/sources.list.bak
+echo "deb http://mirrors.163.com/debian/ jessie main non-free contrib" >> /etc/apt/sources.list
+echo "deb http://mirrors.163.com/debian/ jessie-proposed-updates main non-free contrib" >>/etc/apt/sources.list
+echo "deb-src http://mirrors.163.com/debian/ jessie main non-free contrib" >>/etc/apt/sources.list
+echo "deb-src http://mirrors.163.com/debian/ jessie-proposed-updates main non-free contrib" >>/etc/apt/sources.list
+#更新安装源
+apt-get update 
+#安装vim
+apt-get install vim
+```
+
+### 5.2 修改MySQL容器，更改表名大小写不敏感
+
+```shell
+$ docker exec -it mysql /bin/bash
+$ vi /etc/mysql/mysql.conf.d/mysqld.cnf
+```
+
+在[mysqld]后添加添加，然后重启mysql容器
+
+```properties
+lower_case_table_names=1
+```
+
+## 五.参考文献
+
+1.https://www.runoob.com/docker/docker-tutorial.html
