@@ -90,8 +90,8 @@ from graphframes import GraphFrame
 
 spark = SparkSession.builder.config('spark.jars.packages', 'graphframes:graphframes:0.6.0-spark2.3-s_2.11').getOrCreate()
 
-vertices = spark.createDataFrame([("a", "Alice", 34), ("b", "Bob", 36), ("c", "Tom", 12), ("d", "Jack", 13)], ["id", "name", "age"])
-edges = spark.createDataFrame([("a", "b", "friend"), ("b", "c", "father"), ("c", "d", "classmate")], ["src", "dst", "relationship"])
+vertices = spark.createDataFrame([("a", "Alice", 34), ("b", "Bob", 36), ("e", "Leo", 35), ("c", "Tom", 12), ("d", "Jack", 13)], ["id", "name", "age"])
+edges = spark.createDataFrame([("a", "b", "friend"), ("a", "e", "friend"), ("b", "e", "friend"), ("b", "c", "father"), ("c", "d", "classmate")], ["src", "dst", "relationship"])
 
 graph = GraphFrame(vertices, edges)
 ```
@@ -192,11 +192,9 @@ results.show()
 
 标签传播算法（Label propagation algorithm，LPA）最早是针对社区发现问题时提出的一种解决方案。标签传播算法适用于非重叠社区。
 
-签传播算法的优点是简单快捷、时间复杂度低、接近线性时间，缺点是结果不稳定。它的基本思路如下。
+标签传播算法的优点是简单快捷、时间复杂度低、接近线性时间，缺点是结果不稳定。它的基本思路如下。
 第一步：为所有顶点指定一个唯一的标签。
-第二步：逐轮更新所有顶点的标签，达到收敛要求为止。对于每一轮更新，顶点标签更新的
-规则是对于某一个顶点，考察其所有邻居顶点的标签，并进行统计，将出现个数最多的标签更新
-到当前顶点。当个数最多的标签不唯一时，随机选一个。
+第二步：逐轮更新所有顶点的标签，达到收敛要求为止。对于每一轮更新，顶点标签更新的规则是对于某一个顶点，考察其所有邻居顶点的标签，并进行统计，将出现个数最多的标签更新到当前顶点。当个数最多的标签不唯一时，随机选一个。
 
 ### 3.6 PageRank 算法
 

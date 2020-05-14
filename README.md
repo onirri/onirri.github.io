@@ -27,9 +27,12 @@
 1. [Scikit-Learn降维方法](scikit-learn/Scikit-Learn降维方法.md)
 2. [Scikit-Learn集成学习](scikit-learn/Scikit-Learn集成学习.md)
 3. [Scikit-Learn关联规则](scikit-learn/Scikit-Learn关联规则.md)
+4. [图像数据分析](scikit-learn/图像数据分析.md)
 
 ## 5.Spark
 
 1. [Spark机器学习](spark/Spark机器学习.md)
 2. [Spark GraphFrames图计算](spark/Spark_GraphFrames图计算.md)
 3. [Spark RDD作业](spark/Spark_RDD作业.md)
+4. [出租车数据分析](spark/出租车数据分析.md)
+

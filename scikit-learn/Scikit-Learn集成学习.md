@@ -245,7 +245,7 @@ Score: 0.913333333333
 
 也就是说拟合训练集数据的分数还不错。当然分数高并不一定好，因为可能过拟合。
 
-现在我们将最大弱分离器个数从200增加到300。再来看看拟合分数。
+现在我们将最大弱分类器个数从200增加到300。再来看看拟合分数。
 
 ```python
 bdt = AdaBoostClassifier(DecisionTreeClassifier(max_depth=2, min_samples_split=20, min_samples_leaf=5),
