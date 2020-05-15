@@ -98,10 +98,19 @@ graph = GraphFrame(vertices, edges)
 
 ### 2.4 视图和图操作
 
+GraphFrame 提供四种视图：顶点表视图、边表视图、三元组视图以及模式视图，四个视图返回类型都是 DataFrame。顶点表和边表视图等同于构建图时使用的顶点和边 DataFrame，三元组视图包含了一条边及其关联的两个顶点的所有属性，这三种视图如下图 8-7 所示。
+
+![image-20200515092153313](images/image-20200515092153313.png)
+
 ```python
 graph.vertices.show()
 graph.edges.show()
 graph.triplets.show()
+```
+
+另外，通过 GraphFrame 提供的三个属性：degrees、inDegrees 和 outDegrees 可以获得，顶点的度、入度和出度，如下所示。
+
+```python
 graph.degrees.show()
 graph.inDegrees.show()
 graph.outDegrees.show()
@@ -109,9 +118,16 @@ graph.outDegrees.show()
 
 ### 2.5 模式发现
 
+除了三个基本视图，GraphFrame 通过 find 方法提供了类似与 Neo4j 的 Cypher 查询的模式查询功能，其返回的 DataFrame 类型的结果称为模式视图。它使用一种简单的 DSL 语言用来实现图的结构化查询，采用形如“(a)-[e]->(b)”的模式来描述一条有向边，其中(a)、(b)表示顶点，a 和 b 为顶点名，[e]表示边，e 为边名，->表示有向边的方向。顶点名和边名会作为搜索结果的列名，如果结果中不需要该项，可在模式中省略该名称。另外，模式中有多条边时，需要用分号“;”拼接，例如：“(a)-[e]->(b);(b)-[e2]->(c)”表示一条从 a 到 b，然后从 b 到 c 的路径。如果要表示不包含某条边，可以在表示边的模式前面加上“！”，例如：“(a)-[e]->(b);！(b)-[e2]->(a)”，表示不选取包含重边的边。
+
 ```python
 motifs = graph.find("(a)-[e]->(b)")
 motifs.show()
+```
+
+模式视图是 DataFrame 类型的，同样可以进一步进行查询、过滤和统计操作。
+
+```
 motifs.filter("b.age > 40").show()
 ```
 
@@ -150,13 +166,15 @@ shortestPaths(landmarks)
 
 GraphFrames 中最短路径（Shortest Path）算法实际上是通过封装 GraphX 的最短路径算法实现的，GraphX 实现的是单源最短路径，采用经典的 Dijkstra（迪杰斯特拉）算法。虽然算法命名是最短路径，但返回结果只有距离值，并不会返回完整的路径。
 
-参数 landmarks 表示要计算的目标顶点 ID 集。
+参数 landmarks 表示要计算的目标顶点 ID 集。该方法返回的是所有点到的最短路径，如下代码所示。
 
 ```python
 # landmarks is vector of target vertices
 paths = graph.shortestPaths(landmarks=["a", "d"])
 paths.show()
 ```
+
+最短路径算法计算图中的每一个顶点到目标顶点的最短距离，而且还会忽略边的权重。
 
 ### 3. 3 三角形计数
 
@@ -170,6 +188,8 @@ results.select("id", "count").show()
 
 ### 3.4 连通分量
 
+连通分量（Connected Components）可用于发现网络中环，经常用于社交网络，发现社交圈子，算法使用顶点 ID 标注图中每个连通体，将连通体中序号最小的顶点的 ID 作为连通体的 ID。另外，0.3 版本以后的算法默认实现，需要使用检查点（Checkpoint），在使用之前，要设置检查点目录。
+
 ```python
 spark.sparkContext.setCheckpointDir('checkpoint')
 results = graph.connectedComponents()
@@ -179,22 +199,23 @@ results = graph.stronglyConnectedComponents(maxIter=10)
 results.select("id", "component").orderBy("component").show()
 ```
 
-连通分量（Connected Components）可用于发现网络中环，经常用于社交网络，发现社交圈子，算法使用顶点 ID 标注图中每个连通体，将连通体中序号最小的顶点的 ID 作为连通体的 ID。另外，0.3 版本以后的算法默认实现，需要使用检查点（Checkpoint），在使用之前，要设置检查点目录。
-
 连通分量算法忽略边的方向，将图视作无向图，GraphFrames 还提供了强连通分量算法，它可以接收参数 maxIter，用来指定最大迭代次数。
 
 ### 3.5 标签传播算法
+
+标签传播算法（Label propagation algorithm，LPA）最早是针对社区发现问题时提出的一种解决方案。社区是一个模糊的概念，一般来说，社区是指一个子图，其内部顶点间连接紧密，而与其他社区之间连接稀疏，根据各社区顶点有无交集，又可分为非重叠型社区（disjoint communities）和重叠型社区（overlapping communities）。
+
+标签传播算法适用于非重叠社区，该算法的 API 如下。
 
 ```python
 results = graph.labelPropagation(maxIter=5)
 results.show()
 ```
 
-标签传播算法（Label propagation algorithm，LPA）最早是针对社区发现问题时提出的一种解决方案。标签传播算法适用于非重叠社区。
-
 标签传播算法的优点是简单快捷、时间复杂度低、接近线性时间，缺点是结果不稳定。它的基本思路如下。
-第一步：为所有顶点指定一个唯一的标签。
-第二步：逐轮更新所有顶点的标签，达到收敛要求为止。对于每一轮更新，顶点标签更新的规则是对于某一个顶点，考察其所有邻居顶点的标签，并进行统计，将出现个数最多的标签更新到当前顶点。当个数最多的标签不唯一时，随机选一个。
+1)初始时，给每个节点一个唯一的标签； 
+2)每个节点使用其邻居节点的标签中最多的标签来更新自身的标签。 
+3)反复执行步骤2)，直到每个节点的标签都不再发生变化为止。
 
 ### 3.6 PageRank 算法
 
