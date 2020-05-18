@@ -36,3 +36,10 @@
 3. [Spark RDD作业](spark/Spark_RDD作业.md)
 4. [出租车数据分析](spark/出租车数据分析.md)
 
+## 6.MXNet
+
+1. [异步计算](mxnet/异步计算/异步计算.md)
+
+## 7.Tensorflow
+
+1. [TextRNN文本预测](tensorflow/TextRNN_文本预测/TextRNN_文本预测.md)
