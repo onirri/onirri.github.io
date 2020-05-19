@@ -166,7 +166,7 @@ shortestPaths(landmarks)
 
 GraphFrames 中最短路径（Shortest Path）算法实际上是通过封装 GraphX 的最短路径算法实现的，GraphX 实现的是单源最短路径，采用经典的 Dijkstra（迪杰斯特拉）算法。虽然算法命名是最短路径，但返回结果只有距离值，并不会返回完整的路径。
 
-参数 landmarks 表示要计算的目标顶点 ID 集。该方法返回的是所有点到的最短路径，如下代码所示。
+参数 landmarks 表示要计算的目标顶点 ID 集。该方法返回的是所有点到目标顶点的最短路径，如下代码所示。
 
 ```python
 # landmarks is vector of target vertices
