@@ -37,7 +37,7 @@
 2. [Spark GraphFrames图计算](spark/Spark_GraphFrames图计算.md)
 3. [Spark RDD作业](spark/Spark_RDD作业.md)
 4. [出租车数据分析](spark/出租车数据分析.md)
-5. [图书推荐系统](spark/book_recommend_system.md)
+5. [图书推荐系统](spark/图书推荐系统.md)
 
 ## 6.MXNet
 
