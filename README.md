@@ -30,7 +30,6 @@
 2. [Scikit-Learn集成学习](scikit-learn/Scikit-Learn集成学习.md)
 3. [Scikit-Learn关联规则](scikit-learn/Scikit-Learn关联规则.md)
 4. [图像数据分析](scikit-learn/图像数据分析.md)
-5. [图书推荐系统](spark/图书推荐系统.md)
 
 ## 5.Spark
 
@@ -38,6 +37,7 @@
 2. [Spark GraphFrames图计算](spark/Spark_GraphFrames图计算.md)
 3. [Spark RDD作业](spark/Spark_RDD作业.md)
 4. [出租车数据分析](spark/出租车数据分析.md)
+5. [图书推荐系统](spark/图书推荐系统.md)
 
 ## 6.MXNet
 
