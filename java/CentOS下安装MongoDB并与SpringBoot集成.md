@@ -24,6 +24,8 @@ storageEngine=wiredTiger  #存储引擎有mmapv1、wiretiger、mongorocks
 bind_ip=0.0.0.0  #这样就可外部访问了，例如从win10中去连虚拟机中的MongoDB
 ```
 
+注：要手工新建dbpath和logpath目录，不然不能启动MongoDB。
+
 ### 1.3 启动和测试
 
 启动前先要创建dbpath和logpath
