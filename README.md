@@ -23,6 +23,7 @@
 3. [Hadoop简介和架构分析](hadoop/Hadoop简介和架构分析.md)
 4. [Java操作HDFS的文件和文件夹实例](hadoop/Java操作HDFS的文件和文件夹实例.md)
 5. [Java编写MapReduce实例](hadoop/Java编写MapReduce实例.md)
+6. [CentOS下HBase的安装](hadoop/CentOS下HBase的安装.md)
 
 ## 4.scikit-learn
 
