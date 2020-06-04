@@ -31,6 +31,7 @@
 2. [Scikit-Learn集成学习](scikit-learn/Scikit-Learn集成学习.md)
 3. [Scikit-Learn关联规则](scikit-learn/Scikit-Learn关联规则.md)
 4. [图像数据分析](scikit-learn/图像数据分析.md)
+5. [自然语言处理](scikit-learn/自然语言处理.md)
 
 ## 5.Spark
 

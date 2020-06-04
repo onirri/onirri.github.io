@@ -2,7 +2,18 @@
 
 ## 1.后台系统
 
-### 1.1 项目结构
+### 1.1后台技术架构
+
+- 基础框架：Spring Boot 2.1.6.RELEASE
+- 工作流引擎：Activiti 6.0
+- 持久层框架：Mybatis-plus_3.1.0
+- 安全框架：Apache Shiro 1.4.0，Jwt_3.7.0
+- 数据库连接池：阿里巴巴Druid 1.1.10
+- 多数据源：苞米豆dynamic-datasource 2.5.5
+- 日志打印：logback
+- 其他：fastjson，poi，Swagger-ui，quartz, lombok（简化代码）等。
+
+### 1.2 项目结构
 
 controller：控制器
 
@@ -16,7 +27,7 @@ utils：工具包
 
 ![image-20200526141247322](images/image-20200526141247322.png)
 
-### 1.2 Maven依赖
+### 1.3 Maven依赖
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
@@ -110,7 +121,7 @@ utils：工具包
 
 注：Oracle11g的驱动ojdbc6对SpringBoot的版本有要求，只能使用2.1.X版本的，不支持最新的2.2.X和2.3.X版本。MySQL没有限制。
 
-### 1.3 应用配置
+### 1.4 应用配置
 
 ```yml
 server:
@@ -151,6 +162,22 @@ spring:
 
   swagger:
     swagger-ui-open: true
+    
+mybatis-plus:
+  mapper-locations: classpath*:mapper/*.xml
+  global-config:
+    # 关闭MP3.0自带的banner
+    banner: false
+    db-config:
+      #主键类型  0:"数据库ID自增",1:"该类型为未设置主键类型", 2:"用户输入ID",3:"全局唯一ID (数字类型唯一ID)", 4:"全局唯一ID UUID",5:"字符串全局唯一ID (idWorker 的字符串表示)";
+      id-type: 4
+      # 默认数据库表下划线命名
+      table-underline: true
+  configuration:
+    # 这个配置会将执行的sql打印出来，在开发或测试的时候可以用
+    #log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+    # 返回类型为Map,显示null对应的字段
+    call-setters-on-nulls: true    
 ```
 
 mybatis-generator的配置generatorConfig.xml，放在resources目录下：
@@ -279,7 +306,7 @@ Actitivi流程文件，放在resources/processes目录下。
 </definitions>
 ```
 
-### 1.4 代码编写
+### 1.5 代码编写
 
 DemoApplication应用启动类：
 
@@ -835,7 +862,7 @@ public class ActivitiTask {
 }
 ```
 
-### 1.5 测试
+### 1.6 测试
 
 可以在IDE中直接运行DemoApplication启动类：
 

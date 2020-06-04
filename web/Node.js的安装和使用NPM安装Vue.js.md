@@ -54,7 +54,7 @@ npm install express -g
 # 全局安装 vue-cli
 $ npm install --global vue-cli
 # 创建一个基于 webpack 模板的新项目
-$ vue init webpack my-project
+$ vue init webpack testvue
 # 这里需要进行一些配置，默认回车即可
 
 ? Project name testvue
