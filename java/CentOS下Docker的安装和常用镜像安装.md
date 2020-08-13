@@ -42,12 +42,18 @@ $ yum install -y yum-utils \
   lvm2
 ```
 
-使用以下命令来设置稳定的仓库
+使用以下命令来设置稳定的仓库，分别为阿里云和清华镜像：
 
 ```sh
-$ yum-config-manager \
+$ sudo yum-config-manager \
     --add-repo \
-    https://download.docker.com/linux/centos/docker-ce.repo
+    http://mirrors.aliyun.com/docker-ce/linux/centos/docker-ce.repo
+```
+
+```shell
+$ sudo yum-config-manager \
+    --add-repo \
+    https://mirrors.tuna.tsinghua.edu.cn/docker-ce/linux/centos/docker-ce.repo
 ```
 
 ### 2.3 安装 Docker Engine-Community
@@ -75,7 +81,7 @@ $ sudo docker run hello-world
 编辑 /etc/docker/daemon.json ，写入如下内容：
 
 ```json
-{"registry-mirrors":["https://registry.docker-cn.com"]}
+{"registry-mirrors":["https://hub-mirror.c.163.com/"]}
 ```
 
 之后重新启动服务：
