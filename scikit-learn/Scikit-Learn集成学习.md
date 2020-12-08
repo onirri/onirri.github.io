@@ -279,12 +279,12 @@ Score: 0.894444444444
 
 最后我们看看当弱分类器个数为700，步长为0.7时候的情况：
 
-```
+```python
 bdt = AdaBoostClassifier(DecisionTreeClassifier(max_depth=2, min_samples_split=20, min_samples_leaf=5),
                          algorithm="SAMME",
                          n_estimators=600, learning_rate=0.7)
 bdt.fit(X, y)
-print "Score:", bdt.score(X,y)
+print("Score:", bdt.score(X,y))
 ```
 
 此时的输出为：
