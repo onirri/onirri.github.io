@@ -68,6 +68,10 @@ $pip install graphframes
 ```shell
 $pyspark --packages graphframes:graphframes:0.6.0-spark2.3-s_2.11
 ```
+由于ivy2官方提供的下载路径已经不能使用，请从下面的下载路径：https://repos.spark-packages.org/graphframes/graphframes/0.6.0-spark2.3-s_2.11/graphframes-0.6.0-spark2.3-s_2.11.jar下载。
+
+下载后放到路径中：C:\Users\Administrator\.m2\repository\graphframes\graphframes\0.6.0-spark2.3-s_2.11。
+
 或者使用 SparkConf 的 spark.jars.packages 属性指定依赖包，如下代码所示。
 
 ```python

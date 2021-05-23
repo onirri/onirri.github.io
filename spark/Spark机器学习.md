@@ -76,7 +76,7 @@ spark.ml 则提供了基于 DataFrames 高层次的 API，可以用来构建机�
 
 官方文档：http://spark.apache.org/docs/latest/api/python/pyspark.mllib.html
 
-- **mllib.classification** - **spark.mllib** 包支持二进制分类，多类分类和回归分析的各种方法。分类中一些最流行的算法是 **随机森林，朴素贝叶斯，决策树** 等。
+- **mllib.classification** - **spark.mllib** 包支持二分类，多类分类和回归分析的各种方法。分类中一些最流行的算法是 **随机森林，朴素贝叶斯，决策树** 等。
 
 - **mllib.clustering** - 聚类是一种无监督的学习问题，您可以根据某些相似概念将实体的子集彼此分组。
 
