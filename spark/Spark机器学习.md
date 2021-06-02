@@ -446,6 +446,8 @@ import pandas as pd
 import numpy as np
 import os
 
+from pyspark.shell import spark
+
 labels = [('INFANT_ALIVE_AT_REPORT', typ.IntegerType()),
           ('BIRTH_PLACE', typ.StringType()),
           ('MOTHER_AGE_YEARS', typ.IntegerType()),
